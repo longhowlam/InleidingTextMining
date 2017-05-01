@@ -1,0 +1,14 @@
+---
+title: "Inleiding text mining in R "
+author: "Longhow Lam"
+output: html_notebook
+---
+
+
+```{r}
+iens = readRDS("data/IensReviews.rds")
+ajax = readRDS("data/Ajax.Rds")
+GTST = readRDS("data/GTST_samenvattingen.RDs")
+jaap = readRDS("data/JaapWithLongDescr.RDs")
+rtlnieuws = readRDS()
+```
