@@ -4,11 +4,22 @@ author: "Longhow Lam"
 output: html_notebook
 ---
 
+<br>
+
+# Inleiding
+
+---
+
+Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld. 
+
+* The Basics (StringR, word clouds)
+* Het text2vec package
+* Latent Direchlet Allocation
+* Latent semantic indexing
+* Sentiment analyse
+
+We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax
 
 ```{r}
 iens = readRDS("data/IensReviews.rds")
-ajax = readRDS("data/Ajax.Rds")
-GTST = readRDS("data/GTST_samenvattingen.RDs")
-jaap = readRDS("data/JaapWithLongDescr.RDs")
-rtlnieuws = readRDS()
 ```
