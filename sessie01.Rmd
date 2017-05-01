@@ -4,22 +4,109 @@ author: "Longhow Lam"
 output: html_notebook
 ---
 
+```{r, eval=FALSE, include=FALSE}
+library(stringr)
+library(tidyverse)
+library(ggplot2)
+library(wordcloud)
+library(wordcloud2)
+```
+
 <br>
 
 # Inleiding
 
 ---
 
-Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld. 
+Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld: 
 
-* The Basics (StringR, word clouds)
+* The Basics (stringi en stringr, word clouds)
 * Het text2vec package
+* Distance measures
 * Latent Direchlet Allocation
 * Latent semantic indexing
+* GLMnet modellen
 * Sentiment analyse
 
-We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax
+We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax.
+
+<br>
+
+# The basics
+
+---
+
+## stringr
+```{r}
+RTLN = readRDS("data/AllNieuws.RDs")
+ggplot(RTLN, aes(x=postdatum)) + geom_histogram(binwidth = 3600*24, col="black")
+```
+
+
+## wordclouds
+
+Er zijn twee packages die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`
 
 ```{r}
-iens = readRDS("data/IensReviews.rds")
+
+ajax = readRDS("data/Ajax.Rds")
+ajax = ajax %>% mutate_if(is.factor, as.character)
+
+## pak 5 verslagen
+verslagjes = paste(
+  ajax$Verslag[1:3],
+  collapse = " "
+)
+
+wordcounts = tibble(w = stringi::stri_extract_all_words(
+  str_to_lower(verslagjes)
+  ) %>%
+  unlist
+) %>%
+group_by(w) %>%
+summarise(n=n())
+
+wordcloud(wordcounts$w, wordcounts$n)
+wordcloud2(wordcounts)
+
 ```
+
+Er zitten wat woorden in die we weg willen halen
+
+```{r}
+
+stopwoorden = c("ajax", "de", "een", "het","en","met","in", "van", "op", "er")
+
+w = stringi::stri_extract_all_words(
+      str_to_lower(verslagjes)
+    ) %>%
+    unlist
+
+w =  w[!w %in% stopwoorden]
+
+
+wordcounts2 = data.frame(w, stringsAsFactors = FALSE) %>%
+group_by(w) %>%
+summarise(n=n()) %>% filter (n>2)
+
+
+wordcloud2(wordcounts2)
+
+```
+
+<br>
+
+# Het text2vec package
+
+---
+
+
+## iterators
+
+## vocabulairs
+
+## term document matrices
+
+
+<br>
+
