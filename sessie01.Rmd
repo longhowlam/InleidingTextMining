@@ -28,6 +28,7 @@ Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen w
 * Latent semantic indexing
 * GLMnet modellen
 * Sentiment analyse
+* word embeddings
 
 We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax.
 
