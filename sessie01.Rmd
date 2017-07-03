@@ -10,6 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(wordcloud)
 library(wordcloud2)
+library(text2vec)
 ```
 
 <br>
@@ -95,6 +96,20 @@ wordcloud2(wordcounts2)
 ```
 
 <br>
+
+
+# Talen
+
+```{r}
+
+#devtools::install_github("ropensci/cld2")
+
+cld2::detect_language("To be or not to be")
+cld2::detect_language("ga toch weg, jij rotzak")
+cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-jaar-dicht-van-noord-naar-zuid'), plain_text = FALSE)
+
+```
+
 
 # Het text2vec package
 
