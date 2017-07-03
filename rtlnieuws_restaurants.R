@@ -19,3 +19,7 @@ for(i in 1:1000)
   )
   
 }
+
+
+#pdftools::pdf_text("26.pdf")
+#pdftools::pdf_info("26.pdf")
