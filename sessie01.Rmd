@@ -55,6 +55,7 @@ We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax, RTL 
 ---
 
 ## stringr
+
 ```{r}
 RTLN = readRDS("data/AllNieuws.RDs")
 ggplot(RTLN, aes(x=postdatum)) + geom_histogram(binwidth = 3600*24, col="black")
@@ -138,6 +139,25 @@ cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-ja
 ## vocabulairs
 
 ## term document matrices
+
+## afstanden
+
+
+## Termen prijzen in huis beschrijvingen
+
+## Sentiment prediction
+
+
+
+## glove word embeddings
+
+
+
+Check mijn shiny app
+
+http://145.131.21.163:3838/sample-apps/wordembeddings/
+
+en code op mijn github
 
 
 <br>
