@@ -1,7 +1,23 @@
 ---
-title: "Inleiding text mining in R "
+title: 'Inleiding text mining in R'
+subtitle: "sessie 01"
 author: "Longhow Lam"
-output: html_notebook
+output:
+   html_notebook:
+     theme: sandstone
+     toc: true
+     toc_depth: 2
+     toc_float: true
+     number_sections: true
+#output:
+#  prettydoc::html_pretty:
+#    highlight: github
+#    theme: cayman
+#    toc: true
+#    toc_depth: 2
+#    number_sections: true
+---
+
 ---
 
 ```{r, eval=FALSE, include=FALSE}
@@ -21,16 +37,16 @@ library(text2vec)
 
 Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld: 
 
-* The Basics (stringi en stringr, word clouds)
+* String en text Basics (stringr manipulaties, word clouds)
 * Het text2vec package
 * Distance measures
 * Latent Direchlet Allocation
 * Latent semantic indexing
 * GLMnet modellen
 * Sentiment analyse
-* word embeddings
+* word embeddings (glove)
 
-We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax.
+We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax, RTL en NOS nieuws.
 
 <br>
 
@@ -99,7 +115,7 @@ wordcloud2(wordcounts2)
 <br>
 
 
-# Talen
+## Talen
 
 ```{r}
 
