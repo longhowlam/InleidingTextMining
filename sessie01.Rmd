@@ -27,6 +27,7 @@ library(ggplot2)
 library(wordcloud)
 library(wordcloud2)
 library(text2vec)
+library(pdftools)
 ```
 
 <br>
@@ -37,7 +38,7 @@ library(text2vec)
 
 Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld: 
 
-* String en text Basics (stringr manipulaties, word clouds)
+* String en text basics (stringr manipulaties, word clouds)
 * Het text2vec package
 * Distance measures
 * Latent Direchlet Allocation
@@ -46,7 +47,9 @@ Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen w
 * Sentiment analyse
 * word embeddings (glove)
 
-We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax, RTL en NOS nieuws.
+We gebruiken in deze cursus een aantal data sets die ik eerder al eens gescraped heb. Het betreft: Iens, GTST, Jaap en Ajax, RTL en NOS nieuws.
+
+Er wordt uitgegeaan van en basis kennis van R. Deze cursus bestaat uit twee sessies van ongeveer 3 uur. Er zijn wat begeleidende powerpoint slides.
 
 <br>
 
@@ -54,7 +57,10 @@ We gebruiken in deze cursus een aantal data sets: Iens, GTST, Jaap en Ajax, RTL 
 
 ---
 
-## stringr
+## Het package stringr
+
+
+## reguliere expressies
 
 ```{r}
 RTLN = readRDS("data/AllNieuws.RDs")
@@ -129,8 +135,16 @@ cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-ja
 ```
 
 
+## PDF files
+
+```{r}
+pdf_text("RestaurantsBlacklist/99.pdf")
+```
+
+
 # Het text2vec package
 
+Het werkpaardje voor mij in R voor textmining
 ---
 
 
