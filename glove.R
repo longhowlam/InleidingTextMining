@@ -10,11 +10,17 @@ library(stringr)
 ### data set moet nog van mijn gdrive gehaald worden onder DutchWordEmbeddings
 RTLN = readRDS("data/RTLNIEUWS01.RDs")
 
+
+
+## voor nu even nos artieklen
+RTLN = readRDS("data/AllNieuws.RDs")
+RTLN$id = 1:dim(RTLN)[1]
+
 ### overview of articles per day
 hist(RTLN$date, breaks = "month")
 
 ### text mine, tokenize etc.
-RTLNEWS_tokens = RTLN$value %>%
+RTLNEWS_tokens = RTLN$bodie %>%
   word_tokenizer
 
 ##### and use the tokens to create an iterator and vocabular
@@ -32,6 +38,7 @@ vocab = create_vocabulary(
   ngram = c(ngram_min = 1L, ngram_max = 1L),
   stopwords = stopwoorden
 )
+vocab
 
 pruned_vocab = prune_vocabulary(
   vocab, 
@@ -64,7 +71,7 @@ word_vectors[1,]
 
 
 ###### distances between words....
-WV <- word_vectors["parijs", , drop = FALSE] 
+WV <- word_vectors["aanslag", , drop = FALSE] 
 cos_sim = sim2(x = word_vectors, y = WV, method = "cosine", norm = "l2")
 head(sort(cos_sim[,1], decreasing = TRUE), 20)
 
