@@ -6,7 +6,9 @@ library(ggplot2)
 library(stringr)
 
 ####  import scraped news articles from RTL
-RTLN = readRDS("newsarticles.RDs")
+
+### data set moet nog van mijn gdrive gehaald worden onder DutchWordEmbeddings
+RTLN = readRDS("data/RTLNIEUWS01.RDs")
 
 ### overview of articles per day
 hist(RTLN$date, breaks = "month")
@@ -23,7 +25,7 @@ it_train = itoken(
 )
 
 
-stopwoorden = readRDS("stopwoorden.RDs")
+stopwoorden = readRDS("data/stopwoorden.RDs")
 
 vocab = create_vocabulary(
   it_train, 
