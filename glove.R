@@ -7,20 +7,20 @@ library(stringr)
 
 ####  import scraped news articles from RTL
 
-### data set moet nog van mijn gdrive gehaald worden onder DutchWordEmbeddings
-RTLN = readRDS("data/RTLNIEUWS01.RDs")
+### data set is in delen opgeknipt zodat het op github kon
 
+RTLN1 = readRDS("data/nieuws_2017_2015.RDs")
+RTLN2 = readRDS("data/nieuws_2014_2012.RDs")
+RTLN3 = readRDS("data/nieuws_2011_2006.RDs")
+RTLN = bind_rows(RTLN1,RTLN2, RTLN3)
 
-
-## voor nu even nos artieklen
-RTLN = readRDS("data/AllNieuws.RDs")
 RTLN$id = 1:dim(RTLN)[1]
 
 ### overview of articles per day
 hist(RTLN$date, breaks = "month")
 
 ### text mine, tokenize etc.
-RTLNEWS_tokens = RTLN$bodie %>%
+RTLNEWS_tokens = RTLN$value %>%
   word_tokenizer
 
 ##### and use the tokens to create an iterator and vocabular
