@@ -1,4 +1,3 @@
-library(feather)
 library(text2vec)
 library(dplyr)
 library(anytime)
@@ -71,7 +70,7 @@ word_vectors[1,]
 
 
 ###### distances between words....
-WV <- word_vectors["aanslag", , drop = FALSE] 
+WV <- word_vectors["parijs", , drop = FALSE] 
 cos_sim = sim2(x = word_vectors, y = WV, method = "cosine", norm = "l2")
 head(sort(cos_sim[,1], decreasing = TRUE), 20)
 
