@@ -65,6 +65,9 @@ glove = GlobalVectors$new(word_vectors_size = 250, vocabulary = pruned_vocab, x_
 glove$fit(tcm, n_iter = 30)
 word_vectors = glove$get_word_vectors()
 
+## bewaar de wordvectors
+
+saveRDS(word_vectors, "data/word_vectors.RDs")
 dim(word_vectors)
 word_vectors[1,]
 

@@ -28,6 +28,7 @@ library(wordcloud)
 library(wordcloud2)
 library(text2vec)
 library(pdftools)
+library(reticulate)
 ```
 
 <br>
@@ -150,6 +151,8 @@ Het werkpaardje voor mij in R voor textmining
 
 ## iterators
 
+prepare_fun
+
 ## vocabulairs
 
 ## term document matrices
@@ -161,8 +164,15 @@ Het werkpaardje voor mij in R voor textmining
 
 ## Sentiment prediction
 
+Ik maak onderscheid tussen voorgedefineerd sentiment met woorden lijsten, en voorspelling aan de hand van training data. 
+
+### Nederlands voor gedefinieerd
+ Voor nederlands probeer via python het package pattern.nl (2.7 alleen)
+
+pattern = import("pattern.nl") 
 
 
+### training
 ## glove word embeddings
 
 
