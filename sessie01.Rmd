@@ -169,7 +169,14 @@ Ik maak onderscheid tussen voorgedefineerd sentiment met woorden lijsten, en voo
 ### Nederlands voor gedefinieerd
  Voor nederlands probeer via python het package pattern.nl (2.7 alleen)
 
+```{r}
 pattern = import("pattern.nl") 
+pattern$sentiment("Ik heb deze laptop gekocht wat een vreselijk slecht apparaat")
+
+pattern$sentiment("Ik heb deze laptop gekocht. Vreselijk goed ding")
+```
+
+
 
 
 ### training
