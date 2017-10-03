@@ -167,19 +167,22 @@ prepare_fun
 Ik maak onderscheid tussen voorgedefineerd sentiment met woorden lijsten, en voorspelling aan de hand van training data. 
 
 ### Nederlands voor gedefinieerd
- Voor nederlands probeer via python het package pattern.nl (2.7 alleen)
+Voor Nederlands kan je sentiment bepalen via het Python package pattern.nl (python 2.7 alleen), dit kan je in R aanroepen via reticulate
 
 ```{r}
+library(reticulate)
 pattern = import("pattern.nl") 
 pattern$sentiment("Ik heb deze laptop gekocht wat een vreselijk slecht apparaat")
 
 pattern$sentiment("Ik heb deze laptop gekocht. Vreselijk goed ding")
+pattern$sentiment("Ik heb deze laptop gekocht, niet eens zo slecht")
 ```
 
 
+### training sentiment
 
 
-### training
+
 ## glove word embeddings
 
 
