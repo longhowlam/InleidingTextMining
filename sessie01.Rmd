@@ -40,6 +40,7 @@ library(reticulate)
 Deze cursus geeft een inleiding in text mining in R. De volgende punten zullen worden behandeld: 
 
 * String en text basics (stringr manipulaties, word clouds)
+* Tokenization, lematization
 * Het text2vec package
 * Distance measures
 * Latent Direchlet Allocation
@@ -206,6 +207,28 @@ cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-ja
 pdf_text("RestaurantsBlacklist/99.pdf")
 ```
 
+# Tokenization , part-of-speech tagging en lemmatization
+
+```{r}
+library(udpipe)
+dl <- udpipe_download_model(language = "dutch")
+dl
+```
+```{r}
+udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
+x <- udpipe_annotate(udmodel_dutch, 
+                     x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
+x <- as.data.frame(x)
+x
+```
+```{r}
+udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
+x <- udpipe_annotate(udmodel_dutch, x = RTLN$bodie[1])
+x <- as.data.frame(x)
+x
+
+```
+
 
 # Het text2vec package
 
@@ -222,6 +245,8 @@ prepare_fun
 ## term document matrices
 
 ## afstanden
+
+## Collocations
 
 
 ## Termen prijzen in huis beschrijvingen
@@ -244,6 +269,38 @@ pattern$sentiment("Ik heb deze laptop gekocht, niet eens zo slecht")
 
 
 ### training sentiment
+
+Voor het trainen van sentiment heb je gelabelde data nodig. per document heb je een score of POS/NEG label nodig. Ik gebruik hier als voorbeeld de IENS revies die ik een tijdje geleden heb gescrapet
+
+```{r}
+Iens = readRDS("data/IensReviews.rds")
+```
+
+Check op taal, alleen de NL revies er uit halen
+
+Doe glmnet direct op dtm
+
+Doe een svd en daarna een predictive model
+```{r}
+
+it = itoken(Iens$Review)
+v = create_vocabulary(it) %>% 
+  prune_vocabulary(doc_proportion_max = 0.1, term_count_min = 5)
+vectorizer = vocab_vectorizer(v)
+dtm = create_dtm(it, vectorizer)
+
+dim(dtm)
+tfidf = TfIdf$new()
+lsa = LSA$new(n_topics = 10)
+
+# pipe friendly transformation
+doc_embeddings = dtm %>% 
+  fit_transform(tfidf) %>% 
+  fit_transform(lsa)
+
+dim(doc_embeddings)
+doc_embeddings[1:25,]
+```
 
 
 
