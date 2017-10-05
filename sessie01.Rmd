@@ -58,15 +58,79 @@ Er wordt uitgegeaan van en basis kennis van R. Deze cursus bestaat uit twee sess
 
 ---
 
-## Het package stringr
+## Reguliere expressies en stringr
 
+---
 
-## reguliere expressies
+Character data in R kan je bewerken/manipuleren met het `stringr` package. Voordat we daar verder op in gaan is het handig om te weten wat reguliere expressies zijn.
 
-```{r}
-RTLN = readRDS("data/AllNieuws.RDs")
-ggplot(RTLN, aes(x=postdatum)) + geom_histogram(binwidth = 3600*24, col="black")
+### Reguliere expressies
+
+Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.
+
+```{r, eval=FALSE}
+test = c("Mijn nummer is 06-12345678", "dit is .. een 1628EP postcode test", "foutje?:  0234XD", "dit is er nog een 1628 EP", "en nog een foute 126EP", "nog een 1234    XX", "1234eZ en nog 4567PK", "12345 Aabcde", "&yfy.")
+test
 ```
+
+Een paar voorbeelden van reguliere expressies.
+
+```{r, eval=FALSE}
+library(stringr)
+
+## een digit, en precies 1 digit
+patroon = "\\d"
+str_extract(test, patroon)
+
+## 1 of meerdere digits
+patroon = "\\d+"
+str_extract(test, patroon)
+
+## precies twee letters
+patroon ="[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## Een postcode
+patroon = "\\d{4}\\s?[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## Maar een postcode begint niet met een 0
+patroon = "[1-9]\\d{3}\\s?[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## special punctuation characters !"#$%&’()*+,-./:;<=>?@[]^_`{|}~
+patroon = "[[:punct:]]"
+str_extract(test, patroon)
+```
+
+Sommige mensen zijn de wildcard notatie gewend om te zoeken in strings, deze wildcard notatie kan je vertalen naar reguliere expressies met `glob2rx`. Een paar voorbeelden zullen hieronder geven. 
+
+```{r, eval=FALSE}
+patroon = glob2rx("*23*")
+str_extract(test, patroon)
+```
+
+Voor een cheatsheet over reguliere expressies zie [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+
+### functies uit het package stringr
+
+In het package stringr zijn diverse functies om met characters te werken, een aantal zullen we laten zien
+
+```{r, eval=FALSE}
+testset = titanic::titanic_train %>% select(Name)
+## maak extra kolom aan in titanic die namen zoekt
+testset = testset %>%
+  mutate(
+    naamlengte = str_length(Name),
+    Ownes = str_detect(Name, 'Owen'),
+    Plek = str_locate(testset$Name, "Mr") %>% .[,1],
+    Name2 = str_replace(Name, "Mr", "")
+  )
+
+str_locate(testset$Name, "Mr")
+```
+
+<br>
 
 
 ## wordclouds
