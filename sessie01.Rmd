@@ -281,7 +281,17 @@ Check op taal, alleen de NL revies er uit halen
 
 Doe glmnet direct op dtm
 
+```{r}
+aaaa
+```
+
+
+
+
 Doe een svd en daarna een predictive model
+
+plaatje SVD..... uit mijn slide
+
 ```{r, eval=FALSE}
 
 it = itoken(Iens$Review)
