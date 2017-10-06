@@ -1,27 +1,27 @@
 ---
-title: 'Inleiding text mining in R'
-subtitle: "sessie 01"
+title: "Inleiding text mining in R"
 author: "Longhow Lam"
+subtitle: sessie 01
 output:
-   html_notebook:
-     theme: sandstone
-     toc: true
-     toc_depth: 2
-     toc_float: true
-     number_sections: true
-#output:
-#  prettydoc::html_pretty:
-#    highlight: github
-#    theme: cayman
-#    toc: true
-#    toc_depth: 2
-#    number_sections: true
+  prettydoc::html_pretty:
+    highlight: github
+    theme: cayman
+    toc: true
+    toc_depth: 2
+    number_sections: true
+  html_notebook:
+    number_sections: yes
+    theme: sandstone
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
 ---
 
 ---
 
 ```{r, eval=FALSE, include=FALSE}
 library(stringr)
+library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(wordcloud)
@@ -138,7 +138,7 @@ str_locate(testset$Name, "Mr")
 
 Er zijn twee packages die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`
 
-```{r}
+```{r, eval=FALSE}
 
 ajax = readRDS("data/Ajax.Rds")
 ajax = ajax %>% mutate_if(is.factor, as.character)
@@ -164,7 +164,7 @@ wordcloud2(wordcounts)
 
 Er zitten wat woorden in die we weg willen halen
 
-```{r}
+```{r, eval=FALSE}
 
 stopwoorden = c("ajax", "de", "een", "het","en","met","in", "van", "op", "er")
 
@@ -190,7 +190,7 @@ wordcloud2(wordcounts2)
 
 ## Talen
 
-```{r}
+```{r,eval=FALSE}
 
 #devtools::install_github("ropensci/cld2")
 
@@ -203,25 +203,26 @@ cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-ja
 
 ## PDF files
 
-```{r}
+```{r, eval=FALSE}
 pdf_text("RestaurantsBlacklist/99.pdf")
 ```
 
 # Tokenization , part-of-speech tagging en lemmatization
 
-```{r}
+```{r, eval=FALSE}
 library(udpipe)
 dl <- udpipe_download_model(language = "dutch")
 dl
 ```
-```{r}
+
+```{r, eval=FALSE}
 udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
-x <- udpipe_annotate(udmodel_dutch, 
-                     x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
+x <- udpipe_annotate(udmodel_dutch,  x = "Ik ging op reis en ik nam mee: mijn laptop, mijn zonnebril en goed humeur.")
 x <- as.data.frame(x)
 x
 ```
-```{r}
+
+```{r, eval=FALSE}
 udmodel_dutch <- udpipe_load_model(file = "dutch-ud-2.0-170801.udpipe")
 x <- udpipe_annotate(udmodel_dutch, x = RTLN$bodie[1])
 x <- as.data.frame(x)
@@ -281,7 +282,7 @@ Check op taal, alleen de NL revies er uit halen
 Doe glmnet direct op dtm
 
 Doe een svd en daarna een predictive model
-```{r}
+```{r, eval=FALSE}
 
 it = itoken(Iens$Review)
 v = create_vocabulary(it) %>% 
