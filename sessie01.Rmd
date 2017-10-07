@@ -29,6 +29,7 @@ library(wordcloud2)
 library(text2vec)
 library(pdftools)
 library(reticulate)
+library(cld2)
 ```
 
 <br>
@@ -192,7 +193,7 @@ wordcloud2(wordcounts2)
 
 ```{r,eval=FALSE}
 
-#devtools::install_github("ropensci/cld2")
+devtools::install_github("ropensci/cld2")
 
 cld2::detect_language("To be or not to be")
 cld2::detect_language("ga toch weg, jij rotzak")
@@ -271,26 +272,37 @@ pattern$sentiment("Ik heb deze laptop gekocht, niet eens zo slecht")
 
 ### training sentiment
 
-Voor het trainen van sentiment heb je gelabelde data nodig. per document heb je een score of POS/NEG label nodig. Ik gebruik hier als voorbeeld de IENS revies die ik een tijdje geleden heb gescrapet
+Voor het trainen van sentiment heb je gelabelde data nodig. per document heb je een score of POS/NEG label nodig. Ik gebruik hier als voorbeeld de IENS revies die ik een tijdje geleden heb gescrapet. Per review heb je ook een cijfer die de reviewer heeft gegeven. Deze gebruik ik als target.
+
 
 ```{r}
 Iens = readRDS("data/IensReviews.rds")
 ```
 
-Check op taal, alleen de NL revies er uit halen
+Als eerste controleren op taal en voor deze analyse pakken we alleen de NL reviews.
+
+```{r}
+talen = detect_language(Iens$Review)
+table(talen)
+```
+
 
 Doe glmnet direct op dtm
 
 ```{r}
-aaaa
+
 ```
 
 
 
+De term document matrix is ontzetten sparse, om deze wat compacter te maken, zonder veel informatie verlies kunnen we een SVD trick toe passen.
+
 
 Doe een svd en daarna een predictive model
 
-plaatje SVD..... uit mijn slide
+![](SVD.png)
+
+Als voorbeeldje kan je ook eens kijken naar mijn zzontje :-)   plaatje SVD..... uit mijn slide
 
 ```{r, eval=FALSE}
 
