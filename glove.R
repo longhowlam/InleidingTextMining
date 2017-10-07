@@ -49,21 +49,21 @@ print("*** vocab generated****")
 print(pruned_vocab)
 
 vectorizer <- vocab_vectorizer(
-  pruned_vocab, 
-  # don't vectorize input
-  grow_dtm = FALSE, 
-  # use window of 5 for context words
-  skip_grams_window = 5L
-)
+  pruned_vocab)
 
-tcm <- create_tcm(it_train, vectorizer)
+tcm <- create_tcm(it_train, vectorizer, skip_grams_window = 5L)
 dim(tcm)
+
 
 #######  Glove word embeddings
 
-glove = GlobalVectors$new(word_vectors_size = 250, vocabulary = pruned_vocab, x_max = 10)
-glove$fit(tcm, n_iter = 30)
-word_vectors = glove$get_word_vectors()
+t0 = proc.time()
+
+glove = GlobalVectors$new(word_vectors_size = 250, vocabulary = pruned_vocab, x_max = 10, learning_rate = 0.07)
+word_vectors = glove$fit_transform(tcm, n_iter = 30)
+
+t1 = proc.time()
+t1-t0
 
 ## bewaar de wordvectors
 

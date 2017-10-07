@@ -192,8 +192,8 @@ wordcloud2(wordcounts2)
 ## Talen
 
 ```{r,eval=FALSE}
-
-devtools::install_github("ropensci/cld2")
+# installeer package als het nodig is
+#devtools::install_github("ropensci/cld2")
 
 cld2::detect_language("To be or not to be")
 cld2::detect_language("ga toch weg, jij rotzak")
@@ -305,16 +305,33 @@ Doe een svd en daarna een predictive model
 Als voorbeeldje kan je ook eens kijken naar mijn zzontje :-)   plaatje SVD..... uit mijn slide
 
 ```{r, eval=FALSE}
+## enkele texten evatten wat rare characters
+Sys.setlocale('LC_ALL','C')
 
-it = itoken(Iens$Review)
-v = create_vocabulary(it) %>% 
-  prune_vocabulary(doc_proportion_max = 0.1, term_count_min = 5)
-vectorizer = vocab_vectorizer(v)
+it  = itoken(Iens$Review)
+voc = create_vocabulary(it) %>% 
+  prune_vocabulary(
+    doc_proportion_max = 0.1,
+    term_count_min = 5
+  )
+
+vectorizer = vocab_vectorizer(voc)
 dtm = create_dtm(it, vectorizer)
-
 dim(dtm)
+```
+
+De dtm is een vrij grote sparse matrix met veel nullen
+
+```{r, eval = FALSE}
+sum(dtm > 0) / (1.0*dim(dtm)[1]*dim(dtm)[2])
+```
+
+Pas de SVD toe en neem nu 50 dimensies
+
+```{r, eval = FALSE}
+
 tfidf = TfIdf$new()
-lsa = LSA$new(n_topics = 10)
+lsa = LSA$new(n_topics = 50)
 
 # pipe friendly transformation
 doc_embeddings = dtm %>% 
