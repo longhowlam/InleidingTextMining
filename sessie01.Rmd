@@ -20,6 +20,7 @@ output:
 ---
 
 ```{r, eval=FALSE, include=FALSE}
+### libraries die we in de cursus gebruiken
 library(stringr)
 library(dplyr)
 library(tidyverse)
@@ -68,7 +69,7 @@ Character data in R kan je bewerken/manipuleren met het `stringr` package. Voord
 
 ### Reguliere expressies
 
-Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.
+Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken of filteren. Eerst wat dummy character data.
 
 ```{r, eval=FALSE}
 test = c("Mijn nummer is 06-12345678", "dit is .. een 1628EP postcode test", "foutje?:  0234XD", "dit is er nog een 1628 EP", "en nog een foute 126EP", "nog een 1234    XX", "1234eZ en nog 4567PK", "12345 Aabcde", "&yfy.")
@@ -78,7 +79,7 @@ test
 Een paar voorbeelden van reguliere expressies.
 
 ```{r, eval=FALSE}
-library(stringr)
+
 
 ## een digit, en precies 1 digit
 patroon = "\\d"
@@ -135,9 +136,9 @@ str_locate(testset$Name, "Mr")
 <br>
 
 
-## wordclouds
+## Wordclouds
 
-Er zijn twee packages die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`
+Wordclouds zijn nog steeds een 'mooie' manier om teksten weer te geven. Er zijn twee packages in R die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`
 
 ```{r, eval=FALSE}
 
@@ -262,7 +263,7 @@ Ik maak onderscheid tussen voorgedefineerd sentiment met woorden lijsten, en voo
 ### Nederlands voor gedefinieerd
 Voor Nederlands kan je sentiment bepalen via het Python package pattern.nl (python 2.7 alleen), dit kan je in R aanroepen via reticulate
 
-```{r}
+```{r, eval=FALSE}
 library(reticulate)
 pattern = import("pattern.nl") 
 pattern$sentiment("Ik heb deze laptop gekocht wat een vreselijk slecht apparaat")
@@ -277,13 +278,13 @@ pattern$sentiment("Ik heb deze laptop gekocht, niet eens zo slecht")
 Voor het trainen van sentiment heb je gelabelde data nodig. per document heb je een score of POS/NEG label nodig. Ik gebruik hier als voorbeeld de IENS revies die ik een tijdje geleden heb gescrapet. Per review heb je ook een cijfer die de reviewer heeft gegeven. Deze gebruik ik als target.
 
 
-```{r}
+```{r, eval=FALSE}
 Iens = readRDS("data/IensReviews.rds")
 ```
 
 Als eerste controleren op taal en voor deze analyse pakken we alleen de NL reviews.
 
-```{r}
+```{r, eval=FALSE}
 talen = detect_language(Iens$Review)
 table(talen)
 ```
@@ -291,7 +292,7 @@ table(talen)
 
 Doe glmnet direct op dtm
 
-```{r}
+```{r, eval=FALSE}
 
 ```
 
@@ -346,9 +347,21 @@ doc_embeddings[1:25,]
 
 
 
-## glove word embeddings
+## Glove word embeddings
+
+Een word embedding is een rij getallen die een woord representeert. Deze rij getallen / vectoren worden getrained uit een corpus. Zie bijvoorbeeld [de site van het text2vec package](http://text2vec.org/glove.html)
 
 
+In een traditionele term document matrix zijn de volgende twee documenten vrij ongerelateerd
+
+* De president spreekt met de media
+* Trump praat tegen de pers
+
+maar uit een grotere set documenten zou je kunnen leren dat De president en Trump gerelateerd zijn en dat geld ook voor de media en de pers.
+
+We gaan word embeddings leren op een grote verzameling van RTL Nieuws artikelen
+
+EMBED SCRIPT
 
 Check mijn shiny app
 

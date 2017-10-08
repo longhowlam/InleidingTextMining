@@ -57,6 +57,7 @@ dim(tcm)
 
 #######  Glove word embeddings
 
+## Dit duurt op mijn 4 cores servertje ruim een uur.
 t0 = proc.time()
 
 glove = GlobalVectors$new(word_vectors_size = 250, vocabulary = pruned_vocab, x_max = 10, learning_rate = 0.07)
