@@ -191,6 +191,8 @@ wordcloud2(wordcounts2)
 
 ## Talen
 
+In deze cursus ligt de focus op de Nederlandse taal. Soms krijg je teksten waar misschien ook andere talen in staan. Je kan dit detecteren met de `detect_language` functie uit het cld2 (Google's compact language detector) package
+
 ```{r,eval=FALSE}
 # installeer package als het nodig is
 #devtools::install_github("ropensci/cld2")
