@@ -62,13 +62,10 @@ Er wordt uitgegeaan van en basis kennis van R. Deze cursus bestaat uit twee sess
 
 ---
 
-## Reguliere expressies en stringr
-
----
 
 Character data in R kan je bewerken/manipuleren met het `stringr` package. Voordat we daar verder op in gaan is het handig om te weten wat reguliere expressies zijn.
 
-### Reguliere expressies
+## Reguliere expressies
 
 Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken of filteren. Eerst wat dummy character data.
 
@@ -116,7 +113,7 @@ str_extract(test, patroon)
 
 Voor een cheatsheet over reguliere expressies zie [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
 
-### functies uit het package stringr
+## functies uit het package stringr
 
 In het package stringr zijn diverse functies om met characters te werken, een aantal zullen we laten zien
 
@@ -214,6 +211,9 @@ pdf_text("RestaurantsBlacklist/99.pdf")
 
 # Tokenization , part-of-speech tagging en lemmatization
 
+---
+
+
 ```{r, eval=FALSE}
 library(udpipe)
 dl <- udpipe_download_model(language = "dutch")
@@ -238,8 +238,10 @@ x
 
 # Het text2vec package
 
-Het werkpaardje voor mij in R voor textmining
 ---
+
+
+Het werkpaardje voor mij in R voor textmining
 
 
 ## iterators
@@ -254,8 +256,13 @@ prepare_fun
 
 ## Collocations
 
+# GLMNET
 
-## Termen prijzen in huis beschrijvingen
+---
+
+Wat is het?
+
+# Termen prijzen in huis beschrijvingen
 
 Ik heb huisbeschrijvingen van de website jaap.nl gescrapet.
 
@@ -282,9 +289,6 @@ jaap = jaap %>%
   )
 ```
 
-## GLMNET
-
-Wat is het?
 
 
 
@@ -428,11 +432,14 @@ R2
 
 
 
-## Sentiment prediction
+# Sentiment prediction
+
+---
 
 Ik maak onderscheid tussen voorgedefineerd sentiment met woorden lijsten, en voorspelling aan de hand van training data. 
 
-### Nederlands voor gedefinieerd
+## Nederlands voor gedefinieerd
+
 Voor Nederlands kan je sentiment bepalen via het Python package pattern.nl (python 2.7 alleen), dit kan je in R aanroepen via reticulate
 
 ```{r, eval=FALSE}
@@ -445,7 +452,7 @@ pattern$sentiment("Ik heb deze laptop gekocht, niet eens zo slecht")
 ```
 
 
-### training sentiment
+## training sentiment
 
 Voor het trainen van sentiment heb je gelabelde data nodig. per document heb je een score of POS/NEG label nodig. Ik gebruik hier als voorbeeld de IENS revies die ik een tijdje geleden heb gescrapet. Per review heb je ook een cijfer die de reviewer heeft gegeven. Deze gebruik ik als target.
 
@@ -519,7 +526,9 @@ doc_embeddings[1:25,]
 
 
 
-## Glove word embeddings
+# Glove word embeddings
+
+---
 
 Een word embedding is een rij getallen die een woord representeert. Deze rij getallen / vectoren worden getrained uit een corpus. Zie bijvoorbeeld [de site van het text2vec package](http://text2vec.org/glove.html)
 
@@ -543,4 +552,88 @@ en code op mijn github
 
 
 <br>
+
+
+# Latente Dirichlet Allocatie
+
+---
+
+Hoe kan je nou een beeld krijgen van veel documenten zonder deze allemaal zelf te lezen? Een manier is een Latente Dirichlet Allocatie (LDA) model fitten op de documenten. Met deze techniek kan je een groot aantal documenten indelen in een kleiner aantal topics. Elk topic kenmerkt zich door een aantal woorden, waarvan sommige belangrijker dan anderen.
+
+Het LDA model is een generatief model, het gaat er van uit dat documenten volgens een bepaald stramien worden gegenereerd. Heel in het kort:
+
+Kies een kans mixture van (zeg even 3) topics, bijvoorbeeld 1/4 Topic A, 1/4 Topic B en 1/2 Topic C. Elk topic heeft weer een kansverdeling van woorden, bijvoorbeeld:
+
+Topic A 30% ministerie, 20% politie, 50% veiligheid
+Topic B 25% buitenhof, 25% Den haag, 10% kamer, 40% politiek
+Topic C 15% inenten, 30% bijbel 30% tegen 25% geloof
+Een document wordt dan als volgt gegenereerd: Kies met bovenstaande kansen de topics, en dan per gekozen topic kies een aantal woorden volgens de woorden kansverdeling van het desbetreffende topic.
+
+Van te voren kennen we deze kansverdelingen niet, maar gegeven een aantal documenten proberen we deze kans verdelingen te achterhalen. Dit is het trainen/fitten van een LDA model.
+
+In R kan je met het `text2vec` package ook LDA modellen trainen. We zullen hier de GTST data set gebruiken. Dit zijn 4090 samenvattingen van GTST afleveringen van 1-okober-1990 tot en met 31-05-2012.
+
+```{r}
+GTST = readRDS("data/GTST_samenvattingen.RDs")
+```
+
+Laten we een topic model maken met 15 topics
+
+
+```{r}
+GTST$id = 1:dim(GTST)[1]
+tokens = GTST$text_of_1month %>% 
+  tolower %>% 
+  word_tokenizer
+
+# stopwoorden er uit 
+stopwoorden = readRDS("data/stopwoorden.RDs")
+
+it  = itoken(tokens, ids = GTST$id, progressbar = FALSE)
+voc = create_vocabulary(it, stopwords = stopwoorden) %>% 
+  prune_vocabulary(
+    term_count_min = 5
+  )
+
+vectorizer = vocab_vectorizer(voc)
+dtm = create_dtm(it, vectorizer)
+dim(dtm)
+
+lda_model = LDA$new(
+  n_topics = 15,
+  doc_topic_prior = 0.1,
+  topic_word_prior = 0.01
+)
+
+doc_topic_distr =  lda_model$fit_transform(
+  x = dtm,
+  n_iter = 1000, 
+  convergence_tol = 0.001, 
+  n_check_convergence = 25, 
+  progressbar = FALSE
+)
+```
+
+Wat zit er in output object? Het is een verdeling van topics over alle documenten Verdeling van topics voor document 1
+
+```{r}
+dim(doc_topic_distr)
+
+barplot(doc_topic_distr[1, ], xlab = "topic", 
+        ylab = "proportion", ylim = c(0, 1), 
+        names.arg = 1:ncol(doc_topic_distr))
+```
+
+Het `lda_model` object bevat nu ook de woorden die bij de topics horen
+
+```{r}
+lda_model$get_top_words(n = 20,  lambda = 1)
+```
+
+Plot of topics in twee dimensionale ruimte
+
+```{r}
+lda_model$plot()
+```
+
 
