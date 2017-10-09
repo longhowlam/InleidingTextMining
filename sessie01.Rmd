@@ -586,8 +586,10 @@ tokens = GTST$text_of_1month %>%
   tolower %>% 
   word_tokenizer
 
-# stopwoorden er uit 
-stopwoorden = readRDS("data/stopwoorden.RDs")
+# stopwoorden er uit. Ik heb een lijstje die ik nog aanvul 
+stopwoorden = c(
+  readRDS("data/stopwoorden.RDs"),
+  letters)
 
 it  = itoken(tokens, ids = GTST$id, progressbar = FALSE)
 voc = create_vocabulary(it, stopwords = stopwoorden) %>% 
@@ -614,7 +616,7 @@ doc_topic_distr =  lda_model$fit_transform(
 )
 ```
 
-Wat zit er in output object? Het is een verdeling van topics over alle documenten Verdeling van topics voor document 1
+Wat zit er in output object? Het is een verdeling van topics over alle documenten. Voor document 1 hebben we de volgende topic verdeling
 
 ```{r}
 dim(doc_topic_distr)
@@ -630,10 +632,44 @@ Het `lda_model` object bevat nu ook de woorden die bij de topics horen
 lda_model$get_top_words(n = 20,  lambda = 1)
 ```
 
-Plot of topics in twee dimensionale ruimte
+Plot of topics in twee dimensionale ruimte met behulp van het `LDAvis` package
 
 ```{r}
 lda_model$plot()
 ```
 
+### Scoren van nieuwe documenten
+
+Als je een LDA model hebt gemaakt kan je deze gebruiken om nieuwe documenten te scoren en zo van deze documenten de meest waarschijnlijke topic bepalen.
+
+```{r}
+## pak nu als test gewoon weer wat GTST afleveringen, zeg eveb de eerste 10
+
+TEST = GTST[1:10,]
+
+new_dtm = itoken(
+  TEST$text_of_1month, 
+  tolower, 
+  word_tokenizer, 
+  ids = TEST$id
+) %>% 
+create_dtm(vectorizer)
+
+dim(new_dtm)
+
+new_doc_topic_distr = lda_model$transform(new_dtm)
+```
+
+De matrix new_doc_distr bevat per doument de kans op een topic, hoe kan je per document de meest waarschijnlijek topic halen?
+
+```{r}
+## kijk eens naar een document, zeg 6
+new_doc_topic_distr[6,]
+which.max(new_doc_topic_distr[6,])
+
+## gebruik purrr om een functie toe te passen op rijen van een matrix
+rows <- function(m){ map(seq_len(nrow(m)), ~m[.,] ) }
+purrr::map_int(rows(new_doc_topic_distr), which.max)
+
+```
 
