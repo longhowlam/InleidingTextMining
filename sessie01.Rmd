@@ -3,18 +3,18 @@ title: "Inleiding text mining in R"
 author: "Longhow Lam"
 subtitle: sessie 01
 output:
+  prettydoc::html_pretty:
+    highlight: github
+    number_sections: yes
+    theme: cayman
+    toc: yes
+    toc_depth: 2
   html_notebook:
     number_sections: yes
     theme: sandstone
     toc: yes
     toc_depth: 2
     toc_float: yes
-  prettydoc::html_pretty:
-    highlight: github
-    theme: cayman
-    toc: true
-    toc_depth: 2
-    number_sections: true
 ---
 
 ---
@@ -260,25 +260,29 @@ prepare_fun
 
 ---
 
-Wat is het?
+Het R package `glmnet` fit regressie modellen met zogenaamde elastic net penalties. In tegenstelling tot gewone regressie waar parameters ongelimiteerd mogen zijn, minimaliseren we in glmnet een loss met penalties, zie onderstaande minimalisatie probleem.
 
 
 ![](glmnet.PNG)
 
+Speciale waarden voor $\alpha$ zijn:
 
+* $\alpha = 1$, lasso regression
+* $\alpha = 0$, ridge regression
+* $ 0 < \alpha < 1$, least angle ression
 
 
 # Termen prijzen in huis beschrijvingen
 
 Een toepassing van GLMNET, ik heb huisbeschrijvingen van de website jaap.nl gescrapet.
 
-```{r}
+```{r, eval=FALSE}
 jaap = readRDS("data/jaap.RDs")
 ```
 
 We gaan eerst wat data opschonen, niet et korte beschrijvingen, te dure en te goedkope huizen er ook halen.
 
-```{r}
+```{r, eval=FALSE}
 jaap = jaap %>%
   filter(
     longdescription != ""
@@ -298,7 +302,7 @@ jaap = jaap %>%
 
 
 
-```{r}
+```{r, eval=FALSE}
 
 # create an index column
 jaap$id = 1:dim(jaap)[1]
@@ -580,14 +584,14 @@ Van te voren kennen we deze kansverdelingen niet, maar gegeven een aantal docume
 
 In R kan je met het `text2vec` package ook LDA modellen trainen. We zullen hier de GTST data set gebruiken. Dit zijn 4090 samenvattingen van GTST afleveringen van 1-okober-1990 tot en met 31-05-2012.
 
-```{r}
+```{r, eval=FALSE}
 GTST = readRDS("data/GTST_samenvattingen.RDs")
 ```
 
 Laten we een topic model maken met 15 topics
 
 
-```{r}
+```{r, eval=FALSE}
 GTST$id = 1:dim(GTST)[1]
 tokens = GTST$text_of_1month %>% 
   tolower %>% 
@@ -625,7 +629,7 @@ doc_topic_distr =  lda_model$fit_transform(
 
 Wat zit er in output object? Het is een verdeling van topics over alle documenten. Voor document 1 hebben we de volgende topic verdeling
 
-```{r}
+```{r, eval=FALSE}
 dim(doc_topic_distr)
 
 barplot(doc_topic_distr[1, ], xlab = "topic", 
@@ -635,13 +639,13 @@ barplot(doc_topic_distr[1, ], xlab = "topic",
 
 Het `lda_model` object bevat nu ook de woorden die bij de topics horen
 
-```{r}
+```{r, eval=FALSE}
 lda_model$get_top_words(n = 20,  lambda = 1)
 ```
 
 Plot of topics in twee dimensionale ruimte met behulp van het `LDAvis` package
 
-```{r}
+```{r, eval=FALSE}
 lda_model$plot()
 ```
 
@@ -649,7 +653,7 @@ lda_model$plot()
 
 Als je een LDA model hebt gemaakt kan je deze gebruiken om nieuwe documenten te scoren en zo van deze documenten de meest waarschijnlijke topic bepalen.
 
-```{r}
+```{r, eval=FALSE}
 ## pak nu als test gewoon weer wat GTST afleveringen, zeg eveb de eerste 10
 
 TEST = GTST[1:10,]
@@ -669,7 +673,7 @@ new_doc_topic_distr = lda_model$transform(new_dtm)
 
 De matrix new_doc_distr bevat per doument de kans op een topic, hoe kan je per document de meest waarschijnlijek topic halen?
 
-```{r}
+```{r, eval=FALSE}
 ## kijk eens naar een document, zeg 6
 new_doc_topic_distr[6,]
 which.max(new_doc_topic_distr[6,])
