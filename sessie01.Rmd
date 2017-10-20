@@ -3,18 +3,18 @@ title: "Inleiding text mining in R"
 author: "Longhow Lam"
 subtitle: sessie 01
 output:
-  prettydoc::html_pretty:
-    highlight: github
-    theme: cayman
-    toc: true
-    toc_depth: 2
-    number_sections: true
   html_notebook:
     number_sections: yes
     theme: sandstone
     toc: yes
     toc_depth: 2
     toc_float: yes
+  prettydoc::html_pretty:
+    highlight: github
+    theme: cayman
+    toc: true
+    toc_depth: 2
+    number_sections: true
 ---
 
 ---
@@ -136,7 +136,7 @@ str_locate(testset$Name, "Mr")
 
 ## Wordclouds
 
-Wordclouds zijn nog steeds een 'mooie' manier om teksten weer te geven. Er zijn twee packages in R die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`
+Wordclouds zijn nog steeds een 'mooie' manier om teksten weer te geven. Er zijn twee packages in R die je kan gebruiken voor wordclouds in R, `wordcloud` en `wordcloud2`.
 
 ```{r, eval=FALSE}
 
@@ -262,9 +262,15 @@ prepare_fun
 
 Wat is het?
 
+
+![](glmnet.PNG)
+
+
+
+
 # Termen prijzen in huis beschrijvingen
 
-Ik heb huisbeschrijvingen van de website jaap.nl gescrapet.
+Een toepassing van GLMNET, ik heb huisbeschrijvingen van de website jaap.nl gescrapet.
 
 ```{r}
 jaap = readRDS("data/jaap.RDs")
@@ -567,6 +573,7 @@ Kies een kans mixture van (zeg even 3) topics, bijvoorbeeld 1/4 Topic A, 1/4 Top
 Topic A 30% ministerie, 20% politie, 50% veiligheid
 Topic B 25% buitenhof, 25% Den haag, 10% kamer, 40% politiek
 Topic C 15% inenten, 30% bijbel 30% tegen 25% geloof
+
 Een document wordt dan als volgt gegenereerd: Kies met bovenstaande kansen de topics, en dan per gekozen topic kies een aantal woorden volgens de woorden kansverdeling van het desbetreffende topic.
 
 Van te voren kennen we deze kansverdelingen niet, maar gegeven een aantal documenten proberen we deze kans verdelingen te achterhalen. Dit is het trainen/fitten van een LDA model.
