@@ -3,6 +3,10 @@ title: "Inleiding text mining in R"
 author: "Longhow Lam"
 subtitle: sessie 01
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
   prettydoc::html_pretty:
     highlight: github
     number_sections: yes
@@ -269,7 +273,7 @@ Speciale waarden voor $\alpha$ zijn:
 
 * $\alpha = 1$, lasso regression
 * $\alpha = 0$, ridge regression
-* $ 0 < \alpha < 1$, least angle ression
+* $0 < \alpha < 1$, least angle ression
 
 
 # Termen prijzen in huis beschrijvingen
