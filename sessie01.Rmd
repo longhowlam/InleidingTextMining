@@ -500,6 +500,10 @@ Doe een svd en daarna een predictive model
 
 Als voorbeeldje kan je ook eens kijken naar mijn zzontje :-)   plaatje SVD..... uit mijn slide
 
+
+
+
+
 ```{r, eval=FALSE}
 ## enkele texten evatten wat rare characters
 Sys.setlocale('LC_ALL','C')
