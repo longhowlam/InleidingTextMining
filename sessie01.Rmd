@@ -3,16 +3,16 @@ title: "Inleiding text mining in R"
 author: "Longhow Lam"
 subtitle: sessie 01
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: 2
-    number_sections: yes
   prettydoc::html_pretty:
     highlight: github
     number_sections: yes
     theme: cayman
     toc: yes
     toc_depth: 2
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
   html_notebook:
     number_sections: yes
     theme: sandstone
@@ -213,6 +213,8 @@ cld2::detect_language(url('https://www.rtlnieuws.nl/nederland/maastunnel-twee-ja
 ```{r, eval=FALSE}
 pdf_text("RestaurantsBlacklist/99.pdf")
 ```
+
+Ik heb een [R script file](rtlnieuws_restaurants.R) in dit project een evoorbeeld om meerdere pdf files in te laden en een wordcloud te maken.
 
 # Tokenization , part-of-speech tagging en lemmatization
 
@@ -476,12 +478,20 @@ data.frame(price,merk)
 ---
 
 
-Het werkpaardje voor mij in R voor textmining
+Het werkpaardje voor mij in R voor textmining, zie voor verdere uitleg ook [de site van text2vec](http://text2vec.org/). We maken een zpgenaamde term document matrix (TDM) waar we verdere analyses op kunnen doen. Om tot deze TDM te komen zijn er een aantal stappen te doorlopen.
+
+![](tdm.png)
 
 
 ## iterators
 
 prepare_fun
+
+```{r, eval=FALSE}
+# stopwoorden
+stopwords::stopwords$nl
+```
+
 
 ## vocabulairs
 

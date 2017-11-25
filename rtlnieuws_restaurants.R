@@ -3,6 +3,11 @@ library(purrr)
 library(text2vec)
 library(stringr)
 library(wordcloud)
+library(stopwords)
+
+#install.packages("stopwords")
+stopwords::stopwords$nl
+
 
 ######  download pdf's from RTL Nieuws
 ## They are just numberd i.pdf, but with some 'skips'
@@ -51,7 +56,7 @@ it_train = itoken(
 )
 
 stopwoorden = c(
-  tm::stopwords("nl"),
+  stopwords::stopwords$nl,
   "2016", "verslag", "datum","code", "inspectie", "keuken", "bedrijf", "inspecteurs","gesprek","journaal",
   "nvt",
   letters,
