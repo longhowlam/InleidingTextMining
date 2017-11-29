@@ -31,7 +31,9 @@ library(tidyverse)
 library(ggplot2)
 library(wordcloud)
 library(wordcloud2)
+
 library(text2vec)
+
 library(pdftools)
 library(reticulate)
 library(cld2)
@@ -477,29 +479,80 @@ data.frame(price,merk)
 
 ---
 
-
 Het werkpaardje voor mij in R voor textmining, zie voor verdere uitleg ook [de site van text2vec](http://text2vec.org/). We maken een zpgenaamde term document matrix (TDM) waar we verdere analyses op kunnen doen. Om tot deze TDM te komen zijn er een aantal stappen te doorlopen.
 
 ![](tdm.png)
 
+## NOS nieuws Voorbeeld data
 
-## iterators
+We gebruiken NOS nieuws artikelen die ik een tijdje geleden heb gescrapet.
+
+```{r, eval = FALSE}
+
+NOS = readRDS("data/NOS_Nieuws.RDs") %>%
+  tibble::rowid_to_column( "ID") %>%
+  dplyr::mutate(art = as.character(art))
+
+NOS[1:3,]
+```
+
+## Het maken van een vocabulaire
+
+We definieren een iterator om door teksten heen te gaan.
+
+
+```{r, eval=FALSE}
+# define preprocessing function and tokenization function
+prep_fun = tolower
+tok_fun = word_tokenizer
+
+it_train = itoken(
+  NOS$art, 
+  preprocessor = prep_fun, 
+  tokenizer = tok_fun, 
+  ids = NOS$ID, 
+  progressbar = TRUE
+)
+vocab = create_vocabulary(it_train)
+```
+
+Het resultaat is een vocabulaire van unieke woorden die in al de artikelen te vinden zijn
+
+```{r, eval=FALSE}
+vocab
+dim(vocab)
+# Zipf's law
+# het meest frequente woord ongeveer twee keer zo vaak voorkomt als het op een na frequentste woord, 
+# dat weer twee keer zo vaak als het derde frequentste, enz. 
+
+test = dplyr::arrange(vocab, desc(term_count)) %>% 
+  tibble::rowid_to_column("ID") %>%
+  dplyr::mutate(logcount = log10(term_count))
+
+plot(log10(test$ID), test$logcount)
+```
 
 prepare_fun
+
+ngrams
 
 ```{r, eval=FALSE}
 # stopwoorden
 stopwords::stopwords$nl
 ```
 
+## pruning
 
-## vocabulairs
+
 
 ## term document matrices
 
+
+## TF-IDF term frquency - inverse document frequency
+
+
 ## afstanden
 
-## Collocations
 
 # GLMNET
 
@@ -813,7 +866,7 @@ en code op mijn github
 <br>
 
 
-# Latente Dirichlet Allocatie
+# Latente Dirichlet Allocatie / Topic modeling
 
 ---
 
@@ -932,4 +985,10 @@ rows <- function(m){ map(seq_len(nrow(m)), ~m[.,] ) }
 purrr::map_int(rows(new_doc_topic_distr), which.max)
 
 ```
+
+
+## Collocations
+
+en gebruik in topic models
+
 
