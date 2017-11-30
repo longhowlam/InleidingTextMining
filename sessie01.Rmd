@@ -534,7 +534,8 @@ plot(log10(test$ID), test$logcount)
 
 prepare_fun
 
-ngrams
+## ngrams
+
 
 ```{r, eval=FALSE}
 # stopwoorden
