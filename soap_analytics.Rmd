@@ -1,0 +1,135 @@
+---
+title: "Soap Analytics"
+author: "longhow"
+date: "6/19/2018"
+output:
+  prettydoc::html_pretty:
+    highlight: github
+    number_sections: yes
+    theme: cayman
+    toc: yes
+    toc_depth: 2
+---
+# How close are soap episodes to each other?
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+library(text2vec)
+library(dplyr)
+library(stringr)
+library(reticulate)
+library(plotly)
+```
+
+## Soap episode summaries 
+
+Import Goede Tijden Slechte Tijden (Dutch soap) and The Bold & Beautiful episode summaries. Categorize episodes into periods of multiple years.
+
+```{r}
+GTST = readRDS("data/GTST_samenvattingen.RDs")
+BB = readRDS("data/AllBB.RDs")
+GTST$season = lubridate::year(GTST$datums2)
+GTST$period = cut(GTST$season, breaks = c(1989, 1994, 1998, 2002, 2006, 2010, 2014, 2018))
+```
+
+## text mining 
+
+Turn episodes into a term document matrix by applying text mining functions from the `text2vec` library.
+
+```{r}
+cleanstring = function(x) {
+  x %>% 
+    str_to_lower %>% 
+    str_replace_all("[^[:alnum:]]", " ") %>% 
+    str_replace_all("\\s+", " ")
+}
+
+GTST = GTST %>% 
+  mutate(
+    normalizedText = cleanstring(text_of_1month)
+  )
+
+#### tokennize
+GTST_tokens = GTST$normalizedText %>% word_tokenizer
+
+#### use the tokens to create an iterator and vocabular
+iter = itoken(
+  GTST_tokens, 
+  ids = GTST$datums2,
+  progressbar = TRUE
+)
+
+#### remove some Dutch stopwords
+stw = stopwords::stopwords( language = "nl")
+
+#### Create vocabulary and prune the dimension
+vocab = create_vocabulary(
+  iter, 
+  stopwords = c(stw,letters),
+  ngram = c(ngram_min = 1L, ngram_max = 3L)
+)
+
+pruned_vocab = prune_vocabulary(vocab, doc_proportion_min = 0.001 )
+
+#### create document term matrix and tfidf 
+vectorizer = vocab_vectorizer(pruned_vocab)
+dtm = create_dtm(iter, vectorizer)
+
+#### define tfidf model (Inverse document frequency)
+tfidf = TfIdf$new()
+# fit model to train data and transform train data with fitted model
+dtm_tfidf = fit_transform(dtm, tfidf)
+
+```
+
+Now we have a matrix with dimensions `r dim(dtm_tfidf)` 
+
+## UMAP
+
+Now apply Uniform Manifold Approximation and Projection using the python umap package trough the reticulate library.
+
+```{r}
+use_condaenv(condaenv = "test_lhl")
+umap = import("umap")
+
+embedding = umap$UMAP(
+  n_neighbors = 5L,
+  n_components = 3L,
+  min_dist = 0.1,
+  metric='cosine'
+  )
+
+## sparse matrices are not supported to pass on to python
+full_dtm = as.matrix(dtm_tfidf)
+
+## compute UMAP with 3 components
+embedding_out = embedding$fit_transform(full_dtm)
+```
+
+Visualise embedding in 3D with plotly
+
+```{r}
+plotdata = data.frame(embedding_out)
+plotdata$period = GTST$period
+plotdata$season = GTST$season
+
+plot_ly(
+  plotdata, 
+  x = ~X1,
+  y = ~X2, 
+  z = ~X3,
+  text = ~season,
+  color = ~period,
+  size = 1, sizes = c(1,3) 
+) %>% 
+    layout(title = 'Goede Tijden Slechte Tijden samenvattingen geprojecteerd in 3D')
+```
+
+
+
+
+
+
+
+
+
+
